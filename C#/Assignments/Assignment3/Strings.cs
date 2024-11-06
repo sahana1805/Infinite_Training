@@ -19,7 +19,7 @@ namespace Assignment3
             Console.WriteLine("The length of the word is {0}", length);
 
 
-            Console.WriteLine("Rverse of a word program");
+            Console.WriteLine("Reverse of a word program");
             Console.WriteLine("Enter a word");
             string word2 = Console.ReadLine();
             string reverseword = new String (word2.Reverse().ToArray());
