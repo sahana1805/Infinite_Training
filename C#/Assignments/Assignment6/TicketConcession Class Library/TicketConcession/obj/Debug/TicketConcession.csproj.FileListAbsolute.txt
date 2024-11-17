@@ -1,0 +1,6 @@
+C:\Users\sahanap\source\repos\TicketConcession\TicketConcession\bin\Debug\TicketConcession.dll
+C:\Users\sahanap\source\repos\TicketConcession\TicketConcession\bin\Debug\TicketConcession.pdb
+C:\Users\sahanap\source\repos\TicketConcession\TicketConcession\obj\Debug\TicketConcession.csproj.AssemblyReference.cache
+C:\Users\sahanap\source\repos\TicketConcession\TicketConcession\obj\Debug\TicketConcession.csproj.CoreCompileInputs.cache
+C:\Users\sahanap\source\repos\TicketConcession\TicketConcession\obj\Debug\TicketConcession.dll
+C:\Users\sahanap\source\repos\TicketConcession\TicketConcession\obj\Debug\TicketConcession.pdb
