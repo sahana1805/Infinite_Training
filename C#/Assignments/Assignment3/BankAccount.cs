@@ -28,11 +28,11 @@ namespace Assignment3_BankAccount
             this.transactiontype = transactiontype;
             this.amount = amount;
 
-            if (transactiontype=="D")
+            if (transactiontype == "D")
             {
                 Credit(amount);
             }
-            if(transactiontype=="W")
+            if (transactiontype == "W")
             {
                 Debit(amount);
             }
@@ -75,4 +75,3 @@ namespace Assignment3_BankAccount
         }
     }
 }
-
