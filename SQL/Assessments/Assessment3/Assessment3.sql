@@ -1,5 +1,6 @@
 create database SQLandADO;
 
+
 CREATE TABLE Coursedetails
 (
 C_id VARCHAR(10),
@@ -66,6 +67,8 @@ CREATE PROCEDURE InsertProdDetails
 @DiscountedPrice FLOAT OUTPUT
 AS
 BEGIN
+DECLARE @GeneratedProductID INT;
+DECLARE @DiscountedPrice FLOAT;
 SELECT @GeneratedProductID = COALESCE(MAX(ProductId), 0) + 1 FROM ProductDetails;
 SET @DiscountedPrice = @Price * 0.9;
 INSERT INTO ProductDetails(ProductId, ProductName, Price, DiscountedPrice)
