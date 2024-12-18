@@ -1,5 +1,7 @@
 create database SQLandADO;
 
+use SQLandADO;
+
 
 CREATE TABLE Coursedetails
 (
@@ -60,6 +62,7 @@ DiscountedPrice FLOAT
 );
 
 
+
 CREATE PROCEDURE InsertProdDetails
 @ProductName VARCHAR(25),
 @Price FLOAT,
@@ -67,16 +70,21 @@ CREATE PROCEDURE InsertProdDetails
 @DiscountedPrice FLOAT OUTPUT
 AS
 BEGIN
-DECLARE @GeneratedProductID INT;
-DECLARE @DiscountedPrice FLOAT;
 SELECT @GeneratedProductID = COALESCE(MAX(ProductId), 0) + 1 FROM ProductDetails;
 SET @DiscountedPrice = @Price * 0.9;
 INSERT INTO ProductDetails(ProductId, ProductName, Price, DiscountedPrice)
 VALUES (@GeneratedProductID, @ProductName, @Price, @DiscountedPrice);
 END;
 
+DECLARE @GeneratedProductID INT;
+DECLARE @DiscountedPrice FLOAT;
+
 EXEC InsertProdDetails 
-@ProductName = 'Fan', 
-@Price = 5000,
+@ProductName = 'Chair', 
+@Price = 2000,
 @GeneratedProductID = @GeneratedProductID OUTPUT,
 @DiscountedPrice = @DiscountedPrice OUTPUT;
+
+SELECT * FROM ProductDetails;
+
+ 
