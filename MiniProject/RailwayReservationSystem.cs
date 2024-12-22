@@ -7,35 +7,6 @@ namespace MiniProject
     class Program
     {
         private static string connectionString = "Data Source=ICS-LT-D2YLV44\\SQLEXPRESS;Database=RailwayDB;Trusted_Connection=True;";
-        public static void AdminOptions() 
-        {
-            int adminchoice;
-            Console.WriteLine("------------------------------------");
-            Console.WriteLine("Admin Options: Please enter from 1-4");
-            Console.WriteLine("1. Add trains");
-            Console.WriteLine("2. Modify trains");
-            Console.WriteLine("3. Delete trains");
-            Console.WriteLine("4. Exit");
-            Console.WriteLine("------------------------------------");
-
-            adminchoice = Convert.ToInt32(Console.ReadLine());
-            if (adminchoice == 1)
-            {
-                AddTrains();
-            }
-            else if (adminchoice == 2)
-            {
-                ModifyTrains();
-            }
-            else if (adminchoice == 3)
-            {
-                DeleteTrains();
-            }
-            else
-            {
-                Console.WriteLine("Exiting the program");
-            }
-        }
         public static void AdminLogin() //Admin Login
         {
             Console.WriteLine("-----------");
@@ -73,9 +44,39 @@ namespace MiniProject
                 }
             }
 
-            catch(SqlException)
+            catch (SqlException)
             {
                 Console.WriteLine("Unable to connect to the database, please try again");
+            }
+        }
+
+        public static void AdminOptions() 
+        {
+            int adminchoice;
+            Console.WriteLine("------------------------------------");
+            Console.WriteLine("Admin Options: Please enter from 1-4");
+            Console.WriteLine("1. Add trains");
+            Console.WriteLine("2. Modify trains");
+            Console.WriteLine("3. Delete trains");
+            Console.WriteLine("4. Exit");
+            Console.WriteLine("------------------------------------");
+
+            adminchoice = Convert.ToInt32(Console.ReadLine());
+            if (adminchoice == 1)
+            {
+                AddTrains();
+            }
+            else if (adminchoice == 2)
+            {
+                ModifyTrains();
+            }
+            else if (adminchoice == 3)
+            {
+                DeleteTrains();
+            }
+            else
+            {
+                Console.WriteLine("Exiting the program");
             }
         }
 
@@ -274,46 +275,6 @@ namespace MiniProject
             }
         }
 
-        public static void UserOptions(string userID)
-        {
-            int userchoice;
-            Console.WriteLine("-----------------------------------");
-            Console.WriteLine("User Options: Please enter from 1-6");
-            Console.WriteLine("1. Show trains");
-            Console.WriteLine("2. Book trains");
-            Console.WriteLine("3. Cancel booking");
-            Console.WriteLine("4. View booking");
-            Console.WriteLine("5. View cancellation");
-            Console.WriteLine("6. Exit");
-            Console.WriteLine("-----------------------------------");
-
-            userchoice = Convert.ToInt32(Console.ReadLine());
-            if (userchoice == 1)
-            {
-                ShowTrains(userID);
-            }
-            else if (userchoice == 2)
-            {
-                BookTrains(userID);
-            }
-            else if (userchoice == 3)
-            {
-                CancelBooking(userID);
-            }
-            else if (userchoice == 4)
-            {
-                ViewBooking(userID, true);
-            }
-            else if (userchoice == 5)
-            {
-                ViewCancellation(userID);
-            }
-            else
-            {
-                Console.WriteLine("Exiting the program");
-            }
-        }
-
         public static void UserRegistration() //New User Registration
         {
             Console.WriteLine("-----------------");
@@ -383,6 +344,46 @@ namespace MiniProject
             catch(SqlException)
             {
                 Console.WriteLine("Unable to connect to the database, please try again");
+            }
+        }
+
+        public static void UserOptions(string userID)
+        {
+            int userchoice;
+            Console.WriteLine("-----------------------------------");
+            Console.WriteLine("User Options: Please enter from 1-6");
+            Console.WriteLine("1. Show trains");
+            Console.WriteLine("2. Book trains");
+            Console.WriteLine("3. Cancel booking");
+            Console.WriteLine("4. View booking");
+            Console.WriteLine("5. View cancellation");
+            Console.WriteLine("6. Exit");
+            Console.WriteLine("-----------------------------------");
+
+            userchoice = Convert.ToInt32(Console.ReadLine());
+            if (userchoice == 1)
+            {
+                ShowTrains(userID);
+            }
+            else if (userchoice == 2)
+            {
+                BookTrains(userID);
+            }
+            else if (userchoice == 3)
+            {
+                CancelBooking(userID);
+            }
+            else if (userchoice == 4)
+            {
+                ViewBooking(userID, true);
+            }
+            else if (userchoice == 5)
+            {
+                ViewCancellation(userID);
+            }
+            else
+            {
+                Console.WriteLine("Exiting the program");
             }
         }
 
@@ -515,36 +516,6 @@ namespace MiniProject
             }
         }
 
-        public static void ViewBooking(string userID, bool showUserOptions) //Function to View Booking
-        {
-            Console.WriteLine("---------------");
-            Console.WriteLine("BOOKING DETAILS");
-            Console.WriteLine("---------------");
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                conn.Open();
-                string query = "SELECT b.BookingID, u.Name, tc.TrainNo, tc.ClassType, b.BerthsBooked, b.Status, b.BookingDate FROM Bookings b, Users u, TrainClass tc WHERE b.UserID ='" + userID + "' AND b.UserID = u.UserID  AND b.ClassID = tc.ClassID AND b.Status = 'Booked'";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
-                {
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            Console.WriteLine($"Booking ID: {reader["BookingID"]}, Name: {reader["Name"]}, Train Number: {reader["TrainNo"]}, Class Type: {reader["ClassType"]}, Berths Booked: {reader["BerthsBooked"]}, Status: {reader["Status"]}, BookingDate: {reader["BookingDate"]}");
-                            Console.WriteLine();
-                        }
-
-                        Console.WriteLine();
-                        if(showUserOptions == true)
-                        {
-                            UserOptions(userID);
-                        }
-                        
-                    }
-                }
-            }
-        }
-
         public static void CancelBooking(string userID) //Function to Cancel Booking
         {
             ViewBooking(userID, false);
@@ -597,6 +568,36 @@ namespace MiniProject
                     }
 
                     UserOptions(userID);
+                }
+            }
+        }
+
+        public static void ViewBooking(string userID, bool showUserOptions) //Function to View Booking
+        {
+            Console.WriteLine("---------------");
+            Console.WriteLine("BOOKING DETAILS");
+            Console.WriteLine("---------------");
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                string query = "SELECT b.BookingID, u.Name, tc.TrainNo, tc.ClassType, b.BerthsBooked, b.Status, b.BookingDate FROM Bookings b, Users u, TrainClass tc WHERE b.UserID ='" + userID + "' AND b.UserID = u.UserID  AND b.ClassID = tc.ClassID AND b.Status = 'Booked'";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Console.WriteLine($"Booking ID: {reader["BookingID"]}, Name: {reader["Name"]}, Train Number: {reader["TrainNo"]}, Class Type: {reader["ClassType"]}, Berths Booked: {reader["BerthsBooked"]}, Status: {reader["Status"]}, BookingDate: {reader["BookingDate"]}");
+                            Console.WriteLine();
+                        }
+
+                        Console.WriteLine();
+                        if(showUserOptions == true)
+                        {
+                            UserOptions(userID);
+                        }
+                        
+                    }
                 }
             }
         }
