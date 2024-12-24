@@ -2,7 +2,7 @@
 using System.Data.SqlClient;
 using System.Data;
 
-namespace MiniProject
+namespace Railway
 {
     class Program
     {
@@ -50,7 +50,7 @@ namespace MiniProject
             }
         }
 
-        public static void AdminOptions() 
+        public static void AdminOptions()
         {
             int adminchoice;
             Console.WriteLine("------------------------------------");
@@ -77,6 +77,8 @@ namespace MiniProject
             else
             {
                 Console.WriteLine("Exiting the program");
+                Console.WriteLine();
+                Program.Main(new string[0]);
             }
         }
 
@@ -112,9 +114,28 @@ namespace MiniProject
 
                 // Add classes for the train
                 AddTrainClass(trainNo);
+                Console.WriteLine("Train added successfully!");
+
+                Console.WriteLine();
+
+                Console.WriteLine("----------");
+                Console.WriteLine("ALL TRAINS");
+                Console.WriteLine("----------");
+                string query = "SELECT t.*, tc.ClassType, tc.TotalBerths, tc.AvailableBerths FROM Trains t, TrainClass tc WHERE t.TrainNo = tc.TrainNo";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Console.WriteLine($"Train Number: {reader["TrainNo"]}, Train Name: {reader["TrainName"]}, Origin: {reader["Origin"]}, Destination: {reader["Destination"]}, Status: {reader["Status"]}, IsDeleted: {reader["IsDeleted"]}, ClassType: {reader["ClassType"]}, TotalBerths: {reader["TotalBerths"]}, AvailableBerths: {reader["AvailableBerths"]}");
+                            Console.WriteLine();
+                        }
+                    }
+                }
             }
 
-            Console.WriteLine("Train added successfully!");
             Console.WriteLine();
             AdminOptions();
         }
@@ -251,28 +272,65 @@ namespace MiniProject
                 AdminOptions();
             }
         }
-    
+
         public static void DeleteTrains() //Function to Delete Trains
         {
             Console.WriteLine("------------");
             Console.WriteLine("DELETE TRAIN");
             Console.WriteLine("------------");
-            Console.Write("Enter Train Number: ");
-            int trainNo = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine();
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
 
-                string query = "UPDATE Trains SET IsDeleted = 1 WHERE TrainNo =" + trainNo.ToString();
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                string query1 = "SELECT * FROM Trains WHERE IsDeleted = 0";
+
+                using (SqlCommand cmd = new SqlCommand(query1, conn))
+                {
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Console.WriteLine($"Train Number: {reader["TrainNo"]}, Train Name: {reader["TrainName"]}, Origin: {reader["Origin"]}, Destination: {reader["Destination"]}, Status: {reader["Status"]}");
+                            Console.WriteLine();
+                        }
+                    }
+                }
+
+                Console.Write("Enter Train Number: ");
+                int trainNo = Convert.ToInt32(Console.ReadLine());
+
+                string query2 = "UPDATE Trains SET IsDeleted = 1, Status = 'Inactive' WHERE TrainNo =" + trainNo.ToString();
+                using (SqlCommand cmd = new SqlCommand(query2, conn))
                 {
                     cmd.ExecuteNonQuery();
                 }
+
                 Console.WriteLine("Train (soft) deleted!");
                 Console.WriteLine();
-                AdminOptions();
+
+                Console.WriteLine("----------");
+                Console.WriteLine("ALL TRAINS");
+                Console.WriteLine("----------");
+
+                string query3 = "SELECT * FROM Trains";
+
+                using (SqlCommand cmd = new SqlCommand(query3, conn))
+                {
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Console.WriteLine($"Train Number: {reader["TrainNo"]}, Train Name: {reader["TrainName"]}, Origin: {reader["Origin"]}, Destination: {reader["Destination"]}, Status: {reader["Status"]}, IsDeleted: {reader["IsDeleted"]}");
+                            Console.WriteLine();
+                        }
+                    }
+                }
             }
+
+            Console.WriteLine();
+            AdminOptions();
         }
 
         public static void UserRegistration() //New User Registration
@@ -330,6 +388,7 @@ namespace MiniProject
                         {
                             userID = (string)result;
                             Console.WriteLine($"Login successful!");
+                            Console.WriteLine();
                             UserOptions(userID);
                         }
                         else
@@ -341,7 +400,7 @@ namespace MiniProject
                 }
             }
 
-            catch(SqlException)
+            catch (SqlException)
             {
                 Console.WriteLine("Unable to connect to the database, please try again");
             }
@@ -423,8 +482,8 @@ namespace MiniProject
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                
-                string query1 = "SELECT * FROM Trains WHERE Status = 'Active'";
+
+                string query1 = "SELECT * FROM Trains WHERE Status = 'Active' AND IsDeleted = 0";
 
                 using (SqlCommand cmd = new SqlCommand(query1, conn))
                 {
@@ -446,7 +505,13 @@ namespace MiniProject
                 using (SqlCommand cmd = new SqlCommand(query2, conn))
                 {
                     string status = (string)cmd.ExecuteScalar();
-                    if (status == "Active")
+                    if (status == null)
+                    {
+                        Console.WriteLine("Train does not exist, please try again");
+                        Console.WriteLine();
+                        BookTrains(userID);
+                    }
+                    else if (status == "Active")
                     {
                         Console.WriteLine("Train is active, continue booking");
                         Console.WriteLine();
@@ -592,11 +657,11 @@ namespace MiniProject
                         }
 
                         Console.WriteLine();
-                        if(showUserOptions == true)
+                        if (showUserOptions == true)
                         {
                             UserOptions(userID);
                         }
-                        
+
                     }
                 }
             }
@@ -631,7 +696,7 @@ namespace MiniProject
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome to Railway Reservation System!");
-         
+
             int choice = 0;
 
             Console.WriteLine("-------------------------------");
@@ -655,9 +720,15 @@ namespace MiniProject
             {
                 UserLogin();
             }
-            else
+            else if (choice == 4)
             {
                 Console.WriteLine("Exiting the program");
+            }
+            else
+            {
+                Console.WriteLine("Invalid choice, please enter again");
+                Console.WriteLine();
+                Main(args);
             }
         }
     }

@@ -85,9 +85,6 @@ Name VARCHAR(50) NOT NULL,
 Password VARCHAR(20) NOT NULL
 );
 
-INSERT INTO Admins VALUES
-('Admin123', 'Admin', 'p@ssword');
-
 --User Table
 CREATE TABLE Users
 (
@@ -101,7 +98,7 @@ SELECT * FROM Trains;
 SELECT * FROM TrainClass;
 
 --Bookings Table
---SELECT * FROM BOOKINGS;
+SELECT * FROM BOOKINGS;
 SELECT b.BookingID, u.Name, tc.TrainNo, tc.classtype, b.BerthsBooked, b.Status, b.BookingDate from Bookings b, Users u, TrainClass tc where b.UserID=u.UserID AND b.ClassID = tc.ClassID;
 
 SELECT * FROM Admins;
@@ -116,8 +113,8 @@ SELECT * FROM Users;
 --DROP TABLE Admins;
 --DROP TABLE Users;
 
-
-
+INSERT INTO Admins VALUES
+('Admin123', 'Admin', 'p@ssword');
 
 
 
